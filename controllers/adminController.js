@@ -11,11 +11,10 @@ const registerAdmin = async (req, res) => {
             message: "Admin registered successfully",
             admin: {
                 id: newAdmin.id,
-                username: newAdmin.username,
-                passwrord: newAdmin.password
+                username: newAdmin.username
             }
         });
-    }catch (err) {
+    } catch (err) {
         console.log('something went wrong', err.message)
         res.status(500).json({
             message: "something went wrong"
@@ -25,18 +24,17 @@ const registerAdmin = async (req, res) => {
 
 
 // LOGIN ADMIN ACCOUNT
-
 const loginAdmin = async (req, res) => {
     try {
         const { username, password } = req.body
 
-        const admin = await Admin.findOne({ username });
+        const admin = await Admin.findOne({ username: username.toLowerCase() }).select('+password');
 
         if (!admin) {
             return res.status(401).json({ message: "Invalid username or password" })
         };
 
-        const isMatch = await admin.comparePassword( password );
+        const isMatch = await admin.comparePassword(password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid username or password" })
         };
@@ -46,7 +44,6 @@ const loginAdmin = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: '1d' }
         );
-
         res.status(200).json({
             message: "Login Successful",
             token,
@@ -61,5 +58,17 @@ const loginAdmin = async (req, res) => {
     }
 }
 
+//GETTING ALL ADMINS
+const getAllAdmins = async (req, res) => {
+    try {
+        const admins = await Admin.find().select('-password');
+        res.status(200).json({ admins });
+    }
+    catch (error) {
+        console.log('something went wrong', error.message);
+        res.status(500).json({ message: 'something went wrong' });
+    }
+}
 
-module.exports = { registerAdmin,    loginAdmin };
+
+module.exports = { registerAdmin, loginAdmin, getAllAdmins };
