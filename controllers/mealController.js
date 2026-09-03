@@ -27,7 +27,7 @@ const createMeal = async (req, res) => {
 //VIEW ALL MEALS
 const getAllMeals = async (req, res) => {
     try {
-        const meals = await Meal.find().select('-lastUpdatedBy');
+        const meals = await Meal.find().select('-lastUpdatedBy', '-id', '-__v');
         res.status(200).json({ message: 'Meals retrieved successfully', meals: meals });
     }
     catch(error) {
@@ -39,13 +39,16 @@ const getAllMeals = async (req, res) => {
 //UPDATE MEAL AVAILABILITY
 const updateMealAvailability = async (req, res) => {
     try{
-        const { mealId } = req.params;
-        const isAvailable = req.body;
+        const { availability } = req.params;
+        const { isAvailable } = req.body;
+
+        if (typeof isAvailable !== 'boolean') {
+            return res.status(400).json({ message: 'isAvailable must be a boolean value' });
+        }   
 
         const updatedMeal = await Meal.findByIdAndUpdate(
-            mealId, 
-            { isAvailable, 
-            lastUpdatedBy: req.user._id },
+            mealId, { isAvailable, lastUpdatedBy: req.user._id },
+            { new: true, runValidators: true }
         );
 
         if(!updatedMeal) {
