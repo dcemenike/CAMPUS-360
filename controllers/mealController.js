@@ -27,7 +27,7 @@ const createMeal = async (req, res) => {
 //VIEW ALL MEALS
 const getAllMeals = async (req, res) => {
     try {
-        const meals = await Meal.find().select('-lastUpdatedBy', '-id', '-__v');
+        const meals = await Meal.find().select('-lastUpdatedBy  -_id -__v');
         res.status(200).json({ message: 'Meals retrieved successfully', meals: meals });
     }
     catch(error) {
