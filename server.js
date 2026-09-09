@@ -16,8 +16,15 @@ connectDB();
 const PORT = process.env.PORT;
 const adminRoutes = require('./routes/adminRoutes');
 const mealRoutes = require('./routes/mealRoutes');
-app.use(express.json());    
 
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+
+}
+
+app.use(cors(corsOptions));
+app.use(express.json());    
 app.use('/api/admins', adminRoutes);
 app.use('/api/meals', mealRoutes);
 

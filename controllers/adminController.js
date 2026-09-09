@@ -21,7 +21,7 @@ const registerAdmin = async (req, res) => {
         res.status(201).json({
             message: "Admin registered successfully",
             admin: {
-                id: newAdmin.id,
+                id: newAdmin._id,
                 email: newAdmin.email,
                 username: newAdmin.username
             }
@@ -58,7 +58,7 @@ const loginAdmin = async (req, res) => {
         const token = jwt.sign(
             { id: admin._id },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '6h' }
         );
         res.status(200).json({
             message: "Login Successful",

@@ -23,7 +23,7 @@ const mealSchema = new mongoose.Schema(
             required: [true, 'A meal must belong to a category'],
 
             enum: {
-                values: [ 'Main Dish', 'Snacks', 'Drinks', 'Sides', 'Protein'],
+                values: [ 'Main Dish', 'Snacks', 'Drinks', 'Sides', 'Protein', 'Soup &  Swallow'],
                 message: '{VALUE} is not a valid category.'
             },  
         },

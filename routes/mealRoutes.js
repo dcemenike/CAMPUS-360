@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/', authMiddleware, createMeal);
 router.get('/', getAllMeals);
-router.patch('/:availability', authMiddleware, updateMealAvailability);
+router.patch('/:mealId', authMiddleware, updateMealAvailability);
 
 module.exports = router;
