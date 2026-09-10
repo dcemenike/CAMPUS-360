@@ -18,7 +18,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const mealRoutes = require('./routes/mealRoutes');
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: 'https://campus360restaurant.vercel.app/',
     credentials: true,
 
 }
