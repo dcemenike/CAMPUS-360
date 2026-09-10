@@ -18,9 +18,9 @@ const createMeal = async (req, res) => {
             meal: newMeal
         })
     }
-    catch(error) {
+    catch (error) {
         console.log('something went wrong', error.message);
-        res.status(500).json({ message: 'something went wrong' }); 
+        res.status(500).json({ message: 'something went wrong' });
     }
 };
 
@@ -30,7 +30,7 @@ const getAllMeals = async (req, res) => {
         const meals = await Meal.find().select('-lastUpdatedBy  -__v');
         res.status(200).json({ message: 'Meals retrieved successfully', meals: meals });
     }
-    catch(error) {
+    catch (error) {
         console.log('something went wrong', error.message);
         res.status(500).json({ message: 'something went wrong' });
     }
@@ -38,28 +38,46 @@ const getAllMeals = async (req, res) => {
 
 //UPDATE MEAL AVAILABILITY
 const updateMealAvailability = async (req, res) => {
-    try{
+    try {
         const { mealId } = req.params;
         const { isAvailable } = req.body;
 
         if (typeof isAvailable !== 'boolean') {
             return res.status(400).json({ message: 'isAvailable must be a boolean value' });
-        }   
+        }
 
         const updatedMeal = await Meal.findByIdAndUpdate(
             mealId, { isAvailable, lastUpdatedBy: req.user._id },
             { new: true, runValidators: true }
         );
 
-        if(!updatedMeal) {
+        if (!updatedMeal) {
             return res.status(404).json({ message: 'Meal not found' });
-    }
+        }
         res.status(200).json({ message: 'Meal availability updated successfully', meal: updatedMeal });
     }
-    catch(error) {
+    catch (error) {
         console.log('something went wrong', error.message);
         res.status(500).json({ message: 'something went wrong' });
     }
 }
 
-module.exports = { createMeal, getAllMeals, updateMealAvailability }
+// DELETE MEAL
+const deleteMeal = async (req, res) => {
+    try {
+        const { mealId } = req.params;
+        const deletedMeal = await Meal.findByIdAndDelete(mealId);
+
+        if (!deletedMeal) {
+            return res.status(404).json({ message: 'Meal not found' });
+        }
+        res.status(200).json({ message: `${deletedMeal.name} deleted successfully.` });
+
+    } catch (err) {
+        console.log('something went wrong', error.message);
+        res.status(500).json({ message: 'something went wrong' });
+    }
+}
+
+
+module.exports = { createMeal, getAllMeals, updateMealAvailability, deleteMeal }
